@@ -9,26 +9,25 @@ export const getCartRequest = () => ({
 });
 
 export const getCartSuccess = (response) => ({
-   type: GET_CART_SUCCESS,
-   products: response,
+    type: GET_CART_SUCCESS,
+    products: response,
 });
 
 export const getCartFailure = () => ({
-    type: GET_PRODUCTS_FAILURE,
+    type: GET_CART_FAILURE,
 })
 
 export const getCart = () => async dispatch => {
     dispatch(getCartRequest());
     
     await axios.get('/api/cart')
-    .then(response => response.json())
-    .then(json => {
-        console.log(json);
-        dispatch(getCartSuccess(json));
+    .then(response => {
+        console.log(response);
+        dispatch(getCartSuccess(response.data));
     })
     .catch(err => {
         console.log(err);
-        dispatch(getCartError());
+        dispatch(getCartFailure());
     });
 }
 

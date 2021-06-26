@@ -1,21 +1,32 @@
-import React from 'react';
-import {createStore, combineReducers, applyMiddleware, compose} from "redux";
-import {Provider} from "react-redux";
-import thunk from 'redux-thunk';  
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from "react-redux";
+import * as getCartActions from "../../redux/actions/getCartActions";
 import './App.css';
 
 const App = () => {
+  const getCartState = useSelector(state => state.getCart);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getCartActions.getCart());
+  }, [])
+
+  const mapProducts = (product, index) => {
+    return (
+      <li key={index}>{product.name}, cena: {product.price}zł</li>
+    );
+  }
 
   return (
     <div className="container">
       <h3>Lista produktów</h3>
       <ul>
-        <li className="row">Patelnia, cena: 89,99zł</li>
+        {getCartState.products.map(mapProducts)}
       </ul>
     </div>
   );
 };
 
 export {
-    App
+  App
 };

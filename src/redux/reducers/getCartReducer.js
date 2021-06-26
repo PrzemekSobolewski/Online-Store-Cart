@@ -1,4 +1,4 @@
-import { GET_CART_REQUEST, GET_CART_SUCCESS, GET_PRODUCTS_FAILURE } from "../actions/getCartActions";
+import { GET_CART_REQUEST, GET_CART_SUCCESS, GET_CART_FAILURE } from "../actions/getCartActions";
 
 const initialState = {
     products: [],
@@ -25,7 +25,7 @@ export default (state = initialState, action) => {
                 isSuccess: true,
                 isError: false
             }
-        case GET_PRODUCTS_FAILURE:
+        case GET_CART_FAILURE:
             return {
                 ...state,
                 products: [],
