@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import * as getCartActions from "../../redux/actions/getCartActions";
 import './App.css';
@@ -11,10 +11,27 @@ const App = () => {
     dispatch(getCartActions.getCart());
   }, [])
 
+  const formatter = new Intl.NumberFormat('pl', {
+    style: 'currency',
+    currency: 'PLN',
+  });
+
   const mapProducts = (product, index) => {
     return (
-      <li key={index}>{product.name}, cena: {product.price}zł</li>
+      <li className="product" key={index}>
+        <div className="product__content">
+          <div className="product__name">{product.name}</div>
+          <div className="product__price">{formatter.format(product.price)}</div>
+        </div>
+      </li>
     );
+  }
+
+  const getCartSummary = (products) => {
+    if(getCartState.isSuccess) {
+      const sum = products.reduce((total, product) => { return total + parseFloat(product.price)}, 0);
+      return formatter.format(sum);
+    }
   }
 
   return (
@@ -23,6 +40,9 @@ const App = () => {
       <ul>
         {getCartState.products.map(mapProducts)}
       </ul>
+      <div>
+      <h3>Suma produktów: {getCartSummary(getCartState.products)}</h3>
+      </div>
     </div>
   );
 };

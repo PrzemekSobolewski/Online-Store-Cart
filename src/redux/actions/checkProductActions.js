@@ -28,10 +28,9 @@ export const checkProduct = (pid, quantity) => async dispatch => {
         pid: pid,
         quantity: quantity
     })
-    .then(response => response.json())
-    .then(json => {
-        console.log(json);
-        dispatch(checkProductSuccess(json));
+    .then(response => {
+        console.log(response);
+        dispatch(checkProductSuccess(response.data));
     })
     .catch(err => {
         console.log(err);

@@ -1,10 +1,37 @@
 .container{
     width: 1000px;
     margin: 100px auto 0 auto;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .row {
     padding: 10px;
     border-bottom: 1px solid silver;
     list-style: none;
+}
+ul {
+    list-style: none;
+    padding-inline-start: 0px;
+}
+h3 {
+    font-size: 24px;
+}
+
+.product__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 8px 0px 16px 0;
+}
+.product__content::after {
+    content: "";
+    margin-top: 16px;
+    height: 1px;
+    width: 180%;
+    background: rgb(222, 225, 230);
+    display: block;
+    margin-left: 5%;
+}
+.product__name, .product__price {
+    font-weight: 500;
+    font-size: 20px;
 }
