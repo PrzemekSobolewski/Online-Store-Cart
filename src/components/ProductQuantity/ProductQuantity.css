@@ -1,0 +1,23 @@
+.product__quantity {
+    margin-top: 8px;
+}
+.product__quantity--minus, .product__quantity--plus {
+    padding: 4px;
+    border: 1px solid rgb(222, 225, 230);
+    margin-right: 4px;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    cursor: pointer;
+}
+.product__quantity--buttons {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.inactive {
+    opacity:0.3;
+    pointer-events: none;
+}
+

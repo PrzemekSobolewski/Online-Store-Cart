@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import * as getCartActions from "../../redux/actions/getCartActions";
+import ProductQuantity from "../../components/ProductQuantity/ProductQuantity";
 import './App.css';
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
         <div className="product__content">
           <div className="product__name">{product.name}</div>
           <div className="product__price">{formatter.format(product.price)}</div>
+          <ProductQuantity pid={product.pid} min={product.min} max={product.max} isBlocked={product.isBlocked} />
         </div>
       </li>
     );

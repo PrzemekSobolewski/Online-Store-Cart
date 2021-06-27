@@ -22,18 +22,18 @@ export const checkProductFailure = (error) => ({
 });
 
 export const checkProduct = (pid, quantity) => async dispatch => {
-    dispatch(checkProductsRequest());
+    dispatch(checkProductRequest());
     
     await axios.post('/api/product/check', {
         pid: pid,
         quantity: quantity
     })
     .then(response => {
-        console.log(response);
+        console.log(response.data);
         dispatch(checkProductSuccess(response.data));
     })
-    .catch(err => {
-        console.log(err);
+    .catch(error => {
+        console.log(error);
         dispatch(checkProductFailure(error));
 
     });

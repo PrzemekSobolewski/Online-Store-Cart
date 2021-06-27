@@ -20,16 +20,16 @@ h3 {
 .product__content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: 8px 0px 16px 0;
+    padding: 16px 0px 16px 0;
 }
-.product__content::after {
+.product::after {
     content: "";
-    margin-top: 16px;
+    margin-top: 0px;
     height: 1px;
-    width: 180%;
+    width: 90%;
     background: rgb(222, 225, 230);
     display: block;
-    margin-left: 5%;
+    margin-left: 2%;
 }
 .product__name, .product__price {
     font-weight: 500;
