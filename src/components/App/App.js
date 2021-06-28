@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import * as getCartActions from "../../redux/actions/getCartActions";
 import Product from "../../components/Product/Product";
@@ -7,10 +7,29 @@ import './App.css';
 const App = () => {
   const getCartState = useSelector(state => state.getCart);
   const dispatch = useDispatch();
+  const [productsInCart, setProductsInCart] = useState([]);
+  const [summary, setSummary] = useState(0);
+
+  const handleSummaryChange = (pid, price) => {
+    const filteredProduct = getCartState.products.find(product => product.pid === pid)
+    filteredProduct.price = price;
+
+    const filteredList = getCartState.products.filter(product => product.pid !== pid);
+    console.log(productsInCart);
+    setProductsInCart([...filteredList, filteredProduct]);
+  }
 
   useEffect(() => {
     dispatch(getCartActions.getCart());
   }, []);
+
+  useEffect(() => {
+    setProductsInCart(getCartState.products);
+  }, [getCartState]);
+
+  useEffect(() => {
+    countCartSummary();
+  }, [productsInCart]);
 
   const formatter = new Intl.NumberFormat('pl', {
     style: 'currency',
@@ -20,14 +39,15 @@ const App = () => {
 
   const mapProducts = (product, index) => {
     return (
-      <Product product={product} key={index}/>
+      <Product handleSummaryChange={handleSummaryChange} product={product} key={index}/>
     );
   }
   
-  const getCartSummary = (products) => {
+  const countCartSummary = () => {
     if(getCartState.isSuccess) {
-      const sum = products.reduce((total, product) => { return total + parseFloat(product.price)}, 0);
-      return formatter.format(sum);
+      setSummary(formatter.format(productsInCart.reduce((total, product) => { return total + parseFloat(product.price)}, 0)));
+    }else {
+      setSummary(0);
     }
   }
 
@@ -38,7 +58,7 @@ const App = () => {
         {getCartState.products.map(mapProducts)}
       </ul>
       <div>
-      <h3>Suma produktów: {getCartSummary(getCartState.products)}</h3>
+      <h3>Suma produktów: {summary}</h3>
       </div>
     </div>
   );
