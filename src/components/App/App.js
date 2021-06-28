@@ -12,11 +12,9 @@ const App = () => {
 
   const handleSummaryChange = (pid, price) => {
     const filteredProduct = getCartState.products.find(product => product.pid === pid)
-    filteredProduct.price = price;
-
+    const newProduct = {...filteredProduct, price: price}
     const filteredList = getCartState.products.filter(product => product.pid !== pid);
-    console.log(productsInCart);
-    setProductsInCart([...filteredList, filteredProduct]);
+    setProductsInCart([...filteredList, newProduct]);
   }
 
   useEffect(() => {
@@ -35,7 +33,6 @@ const App = () => {
     style: 'currency',
     currency: 'PLN',
   });
-
 
   const mapProducts = (product, index) => {
     return (

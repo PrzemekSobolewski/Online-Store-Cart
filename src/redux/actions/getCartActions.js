@@ -22,11 +22,9 @@ export const getCart = () => async dispatch => {
     
     await axios.get('/api/cart')
     .then(response => {
-        console.log(response);
         dispatch(getCartSuccess(response.data));
     })
     .catch(err => {
-        console.log(err);
         dispatch(getCartFailure());
     });
 }

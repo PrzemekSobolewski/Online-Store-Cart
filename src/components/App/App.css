@@ -16,22 +16,3 @@ ul {
 h3 {
     font-size: 24px;
 }
-
-.product__content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 16px 0px 16px 0;
-}
-.product::after {
-    content: "";
-    margin-top: 0px;
-    height: 1px;
-    width: 90%;
-    background: rgb(222, 225, 230);
-    display: block;
-    margin-left: 2%;
-}
-.product__name, .product__price {
-    font-weight: 500;
-    font-size: 20px;
-}
