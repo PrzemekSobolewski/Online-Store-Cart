@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as getCartActions from "../../redux/actions/getCartActions";
 import Product from "../../components/Product/Product";
-import './App.css';
+import {FadeLoader} from "react-spinners";
+import "./App.css";
 
 const App = () => {
   const getCartState = useSelector(state => state.getCart);
@@ -48,17 +49,32 @@ const App = () => {
     }
   }
 
-  return (
-    <div className="container">
-      <h3>Lista produktów</h3>
-      <ul>
-        {getCartState.products.map(mapProducts)}
-      </ul>
-      <div>
-      <h3>Suma produktów: {summary}</h3>
+  if(getCartState.isError) {
+    return (
+      <div className="container">
+        <div className="cart__error">Ups coś poszło nie tak</div>
       </div>
-    </div>
-  );
+    )
+  }else if(getCartState.isSuccess) {
+    return (
+      <div className="container">
+        <h3>Lista produktów</h3>
+        <ul>
+          {getCartState.products.map(mapProducts)}
+        </ul>
+        <div>
+        <h3>Suma produktów: {summary}</h3>
+        </div>
+      </div>
+    );
+  }else {
+    return (
+      <div className="container">
+        <div className="cart__loader"><FadeLoader color={'#000000'} loading={true} size={150}/></div>
+      </div>
+    )
+  }
+
 };
 
 export {

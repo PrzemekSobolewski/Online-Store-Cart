@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import ProductQuantity from "../../components/ProductQuantity/ProductQuantity";
-import './Product.css';
+import "./Product.css";
 
 const Product = (props) => {
     const [quantity, setQuantity] = useState(props.product.min);

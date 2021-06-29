@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as checkProductActions from "../../redux/actions/checkProductActions";
-
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import _ from "lodash";
+import { PulseLoader } from "react-spinners";
+import "./ProductQuantity.css";
 
-import './ProductQuantity.css';
 const ProductQuantity = (props) => {
     const addButton = useRef(null);
     const substractButton = useRef(null);
@@ -31,8 +31,8 @@ const ProductQuantity = (props) => {
     }, [props.quantity]);
 
     useEffect(() => {
-        if(checkProductState.isError) {
-            props.setQuantity(1)
+        if(checkProductState.isError && (checkProductState.pid == props.pid)) {
+            props.setQuantity(1);
         }
     }, [checkProductState])
 
@@ -41,13 +41,13 @@ const ProductQuantity = (props) => {
     }, 500);
 
     const substractProduct = () => {
-        if (props.min < props.quantity) {
+        if ((props.min < props.quantity) && !checkProductState.isLoading) {
             updateQuantity(props.quantity - 1);
         }
     }
 
     const addProduct = () => {
-        if (props.max > props.quantity) {
+        if ((props.max > props.quantity) && !checkProductState.isLoading) {
             updateQuantity(props.quantity + 1);
         }
     }
@@ -58,8 +58,10 @@ const ProductQuantity = (props) => {
             <div className="product__quantity--buttons">
                 <span className="product__quantity--minus" ref={substractButton} onClick={substractProduct}><FaMinus /></span>
                 <span className="product__quantity--plus" ref={addButton} onClick={addProduct}><FaPlus /></span>
+                {checkProductState.isLoading && (checkProductState.pid == props.pid) ? (
+                    <PulseLoader color={'#000000'} loading={true} size={9}/>
+                ) : null}
             </div>
-
         </div>
     )
 }
