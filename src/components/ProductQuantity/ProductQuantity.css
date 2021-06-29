@@ -21,3 +21,13 @@
     pointer-events: none;
 }
 
+@media (max-width: 1024px) {
+    .product__quantity--minus svg, .product__quantity--plus svg {
+        transform: scale(0.9)
+    }
+}
+@media (max-width: 480px) {
+    .product__quantity--buttons {
+        margin-top: 24px;
+    }
+}

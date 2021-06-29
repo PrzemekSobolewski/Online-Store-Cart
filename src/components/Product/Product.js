@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import ProductQuantity from "../../components/ProductQuantity/ProductQuantity";
+import ProductQuantity from "../ProductQuantity/ProductQuantity";
+import { formatter } from "../Formatter/Formatter";
 import "./Product.css";
 
 const Product = (props) => {
@@ -13,11 +14,6 @@ const Product = (props) => {
     useEffect(() => {
         props.handleSummaryChange(props.product.pid, price);
     }, [price]);
-
-    const formatter = new Intl.NumberFormat('pl', {
-        style: 'currency',
-        currency: 'PLN',
-    });
 
     return (
         <li className="product" >

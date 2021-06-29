@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as getCartActions from "../../redux/actions/getCartActions";
-import Product from "../../components/Product/Product";
+import Product from "../Product/Product";
+import { formatter } from "../Formatter/Formatter";
 import {FadeLoader} from "react-spinners";
 import "./App.css";
 
@@ -12,9 +13,9 @@ const App = () => {
   const [summary, setSummary] = useState(0);
 
   const handleSummaryChange = (pid, price) => {
-    const filteredProduct = getCartState.products.find(product => product.pid === pid)
+    const filteredProduct = productsInCart.find(product => product.pid === pid)
     const newProduct = {...filteredProduct, price: price}
-    const filteredList = getCartState.products.filter(product => product.pid !== pid);
+    const filteredList = productsInCart.filter(product => product.pid !== pid);
     setProductsInCart([...filteredList, newProduct]);
   }
 
@@ -29,11 +30,6 @@ const App = () => {
   useEffect(() => {
     countCartSummary();
   }, [productsInCart]);
-
-  const formatter = new Intl.NumberFormat('pl', {
-    style: 'currency',
-    currency: 'PLN',
-  });
 
   const mapProducts = (product, index) => {
     return (

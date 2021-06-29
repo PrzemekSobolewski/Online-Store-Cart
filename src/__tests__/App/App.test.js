@@ -2,15 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { getQueriesForElement } from '@testing-library/dom';
 import "@testing-library/jest-dom/extend-expect";
-import { App } from '../components/App/App.js';
+import { App } from '../../components/App/App.js';
 import {Provider} from 'react-redux';
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk';
-
-const formatter = new Intl.NumberFormat('pl', {
-    style: 'currency',
-    currency: 'PLN',
-});
 
 const products = [
     {
@@ -44,6 +39,7 @@ const products = [
         isBlocked: true
     }
 ];
+
 test("render App with success state", () => {
     const mockStore = configureMockStore([thunk]);
     const store = mockStore({
@@ -70,8 +66,8 @@ test("render App with success state", () => {
     const { getByText } = getQueriesForElement(root);
 
     expect(getByText('Lista produktów')).not.toBeNull();
-    const sum = products.reduce((sum, product) => sum + product.price, 0);
-    expect(getByText(formatter.format(sum))).not.toBeNull();
+    expect(getByText('Patelnia')).not.toBeNull();
+   
 });
 
 test("render App in loading state", () => {
