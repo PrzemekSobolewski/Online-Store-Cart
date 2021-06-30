@@ -19,7 +19,7 @@ const Product = props => {
   return (
     <div className="product__content">
       <div className="product__name">{props.product.name}</div>
-      <div className="product__price">{formatter.format(price)}</div>
+      <div className="product__price" data-testid="product-price">{formatter.format(price)}</div>
       <ProductQuantity
         quantity={quantity}
         setQuantity={setQuantity}
@@ -33,7 +33,7 @@ const Product = props => {
 }
 
 Product.propTypes = {
-  product: PropTypes.array.isRequired,
+  product: PropTypes.object.isRequired,
   handleSummaryChange: PropTypes.func.isRequired,
 }
 

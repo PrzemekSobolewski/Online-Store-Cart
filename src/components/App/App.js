@@ -48,11 +48,10 @@ const App = () => {
 
   const mapProducts = (product, index) => {
     return (
-      <li className="product">
+      <li className="product" key={index}>
         <Product
           handleSummaryChange={handleSummaryChange}
           product={product}
-          key={index}
         />
       </li>
     )
@@ -61,7 +60,7 @@ const App = () => {
   if (getCartState.isError) {
     return (
       <div className="container">
-        <div className="cart__error">Ups coś poszło nie tak</div>
+        <div data-testid="cart-error" className="cart__error">Ups, coś poszło nie tak</div>
       </div>
     )
   } else if (getCartState.isSuccess) {
@@ -70,14 +69,14 @@ const App = () => {
         <h3>Lista produktów</h3>
         <ul>{getCartState.products.map(mapProducts)}</ul>
         <div>
-          <h3>Suma produktów: {summary}</h3>
+          <h3 data-testid="cart-summary">Suma produktów: {summary}</h3>
         </div>
       </div>
     )
   } else {
     return (
       <div className="container">
-        <div className="cart__loader">
+        <div data-testid="cart-loader" className="cart__loader">
           <FadeLoader color={'#000000'} loading={true} size={150} />
         </div>
       </div>

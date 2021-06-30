@@ -1,48 +1,86 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { render, screen } from '@testing-library/react'
-import { getQueriesForElement } from '@testing-library/dom';
-import "@testing-library/jest-dom/extend-expect";
-import Product from '../../components/Product/Product.js';
-import { Provider } from 'react-redux';
+import React from 'react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
+import Product from '../../components/Product/Product.js'
+import { Provider } from 'react-redux'
 import configureMockStore from 'redux-mock-store'
-import thunk from 'redux-thunk';
+import thunk from 'redux-thunk'
+import products from '../../__mock__/cart.json'
 
-test("calling render with Product component on the same container", () => {
+const productsInCart = products
 
-    const mockStore = configureMockStore([thunk]);
-    const store = mockStore({
-        checkProduct: {
-            isLoading: false,
-            isError: false,
-            isSuccess: true,
-            message: '',
-            errorType: ''
-        }
-    });
+const setState = jest.fn()
+const mockHandleSummaryChange = jest.fn((pid, price) => {
+  const filteredProduct = productsInCart.find(product => product.pid === pid)
+  const newProduct = { ...filteredProduct, price: price }
+  const filteredList = productsInCart.filter(product => product.pid !== pid)
+  setState([...filteredList, newProduct])
+})
 
-    let product =
-    {
-        pid: "8e5e1248-c799-4937-9acc-2b3ab0e034ff",
-        name: "Patelnia",
-        price: "89.99",
-        max: 10,
-        min: 1
-    };
+const mockStore = configureMockStore([thunk])
+const store = mockStore({
+  checkProduct: {
+    isLoading: false,
+    isError: false,
+    isSuccess: true,
+    message: '',
+    errorType: '',
+  },
+})
 
-    const { rerender } = render(<Provider store={store}><Product product={product} /></Provider>)
-    expect(screen.querySelector('.product__name').innerText).toBe('Patelnia');
+test('test Product component buttons', async () => {
+  jest
+    .spyOn(React, 'useState')
+    .mockImplementation(initState => [initState, setState])
 
-    product =
-    {
-        pid: "51630312-2166-4cae-9590-ad77fd9f4a55",
-        name: "Ręcznik kuchenny",
-        price: "5.00",
-        max: 20,
-        min: 1
-    };
+  const { getByText, getByTestId } = render(
+    <Provider store={store}>
+      <Product
+        product={products[0]}
+        handleSummaryChange={mockHandleSummaryChange}
+      />
+    </Provider>,
+  )
 
-    rerender(<Provider store={store}><Product product={product} /></Provider>);
-    expect(screen.querySelector('.product__name').innerText).toBe('Ręcznik kuchenny');
+  expect(getByText('Patelnia')).toBeInTheDocument()
+  expect(getByTestId('product-quantity')).toHaveTextContent('1')
+  expect(getByTestId('product-price')).toHaveTextContent(products[0].price)
+  expect(getByTestId('substract-button')).toHaveClass('inactive')
 
-});
+  fireEvent.click(getByTestId('add-button'))
+  expect(mockHandleSummaryChange).toHaveBeenCalled()
+  await waitFor(() =>
+    expect(getByTestId('substract-button')).not.toHaveClass('inactive'),
+  )
+  expect(getByTestId('product-quantity')).toHaveTextContent('2')
+  expect(getByTestId('product-price')).toHaveTextContent(products[0].price * 2)
+
+  fireEvent.click(getByTestId('substract-button'))
+  expect(mockHandleSummaryChange).toHaveBeenCalled()
+  await waitFor(() =>
+    expect(getByTestId('substract-button')).toHaveClass('inactive'),
+  )
+  expect(getByTestId('product-quantity')).toHaveTextContent('1')
+  expect(getByTestId('product-price')).toHaveTextContent(products[0].price)
+})
+
+test('calling render on Product with diffrent product', async () => {
+  const { rerender, getByText } = render(
+    <Provider store={store}>
+      <Product
+        product={products[0]}
+        handleSummaryChange={mockHandleSummaryChange}
+      />
+    </Provider>,
+  )
+  expect(getByText('Patelnia')).toBeInTheDocument()
+  rerender(
+    <Provider store={store}>
+      <Product
+        product={products[1]}
+        handleSummaryChange={mockHandleSummaryChange}
+      />
+    </Provider>,
+  )
+  expect(getByText('Garnek mały')).toBeInTheDocument()
+})

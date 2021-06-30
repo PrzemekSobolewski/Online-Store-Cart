@@ -1,128 +1,138 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { getQueriesForElement } from '@testing-library/dom';
-import "@testing-library/jest-dom/extend-expect";
-import { App } from '../../components/App/App.js';
-import {Provider} from 'react-redux';
+import React from 'react'
+import { render, waitFor, fireEvent } from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
+import { App } from '../../components/App/App.js'
+import { Provider } from 'react-redux'
 import configureMockStore from 'redux-mock-store'
-import thunk from 'redux-thunk';
+import thunk from 'redux-thunk'
+import products from '../../__mock__/cart.json'
 
-const products = [
-    {
-        pid: "8e5e1248-c799-4937-9acc-2b3ab0e034ff",
-        name: "Patelnia",
-        price: "89.99",
-        max: 10,
-        min: 1
+test('render App with success state', () => {
+  const mockStore = configureMockStore([thunk])
+  const store = mockStore({
+    getCart: {
+      products: products,
+      isLoading: false,
+      isSuccess: true,
+      isError: false,
     },
-    {
-        pid: "51630312-2166-4cae-9590-ad77fd9f4a55",
-        name: "Ręcznik kuchenny",
-        price: "5.00",
-        max: 20,
-        min: 1
+    checkProduct: {
+      isLoading: false,
+      isError: false,
+      isSuccess: false,
+      message: '',
+      errorType: '',
     },
-    {
-        pid: "14cc426d-8db0-46c4-b579-3f61ff3568ca",
-        name: "React (ebook)",
-        price: "34.99",
-        max: 1,
-        min: 1,
-        isBlocked: true
+  })
+
+  const { getByText, getByTestId } = render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+  )
+
+  expect(getByText('Lista produktów')).toBeInTheDocument()
+  expect(getByText('Patelnia')).toBeInTheDocument()
+  expect(getByTestId('cart-summary')).toHaveTextContent(
+    Math.round(
+      products.reduce((total, product) => {
+        return total + parseFloat(product.price)
+      }, 0) * 100,
+    ) / 100,
+  )
+})
+
+test('update cart summary', async () => {
+  const mockStore = configureMockStore([thunk])
+  const store = mockStore({
+    getCart: {
+      products: products,
+      isLoading: false,
+      isSuccess: true,
+      isError: false,
     },
-    {
-        pid: "8a6a63f0-0605-4340-a7f5-aff3a592eb5a",
-        name: "Kuchnia tradycyjna (ebook)",
-        price: "24.99",
-        max: 1,
-        min: 1,
-        isBlocked: true
-    }
-];
+    checkProduct: {
+      isLoading: false,
+      isError: false,
+      isSuccess: false,
+      message: '',
+      errorType: '',
+    },
+  })
 
-test("render App with success state", () => {
-    const mockStore = configureMockStore([thunk]);
-    const store = mockStore({
-        getCart: {
-            products: products,
-            isLoading: false,
-            isSuccess: true,
-            isError: false
-        },
-        checkProduct: {
-            isLoading: false,
-            isError: false,
-            isSuccess: false,
-            message: '',
-            errorType: ''
-        }
-    })
-    const root = document.createElement('div');
-    ReactDOM.render( 
-    <Provider store={store}>  
-        <App />
-    </Provider>, root);
+  const { getByTestId, getAllByTestId } = render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+  )
 
-    const { getByText } = getQueriesForElement(root);
+  let cartValue =
+    Math.round(
+      products.reduce((total, product) => {
+        return total + parseFloat(product.price)
+      }, 0) * 100,
+    ) / 100
+  expect(getByTestId('cart-summary')).toHaveTextContent(cartValue)
 
-    expect(getByText('Lista produktów')).not.toBeNull();
-    expect(getByText('Patelnia')).not.toBeNull();
-   
-});
+  fireEvent.click(getAllByTestId('add-button')[0])
 
-test("render App in loading state", () => {
-    const mockStore = configureMockStore([thunk]);
-    const store = mockStore({
-        getCart: {
-            products: [],
-            isLoading: true,
-            isSuccess: false,
-            isError: false
-        },
-        checkProduct: {
-            isLoading: false,
-            isError: false,
-            isSuccess: false,
-            message: '',
-            errorType: ''
-        }
-    })
-    const root = document.createElement('div');
-    ReactDOM.render( 
-    <Provider store={store}>  
-        <App />
-    </Provider>, root);
+  cartValue =
+    Math.round((cartValue + parseFloat(products[0].price)) * 100) / 100
+  await waitFor(() =>
+    expect(getByTestId('cart-summary')).toHaveTextContent(cartValue),
+  )
+})
 
-    expect(root.querySelectorAll('.cart__loader')).toHaveLength(1);
-});
+test('render App in loading state', () => {
+  const mockStore = configureMockStore([thunk])
+  const store = mockStore({
+    getCart: {
+      products: [],
+      isLoading: true,
+      isSuccess: false,
+      isError: false,
+    },
+    checkProduct: {
+      isLoading: false,
+      isError: false,
+      isSuccess: false,
+      message: '',
+      errorType: '',
+    },
+  })
 
-test("render App in error state", () => {
-    const mockStore = configureMockStore([thunk]);
-    const store = mockStore({
-        getCart: {
-            products: [],
-            isLoading: false,
-            isSuccess: false,
-            isError: true
-        },
-        checkProduct: {
-            isLoading: false,
-            isError: false,
-            isSuccess: false,
-            message: '',
-            errorType: ''
-        }
-    })
-    const root = document.createElement('div');
-    ReactDOM.render( 
-    <Provider store={store}>  
-        <App />
-    </Provider>, root);
+  const { getByTestId } = render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+  )
 
-    expect(root.querySelectorAll('.cart__error')).toHaveLength(1);
-});
+  expect(getByTestId('cart-loader')).toBeInTheDocument()
+})
 
+test('render App in error state', () => {
+  const mockStore = configureMockStore([thunk])
+  const store = mockStore({
+    getCart: {
+      products: [],
+      isLoading: false,
+      isSuccess: false,
+      isError: true,
+    },
+    checkProduct: {
+      isLoading: false,
+      isError: false,
+      isSuccess: false,
+      message: '',
+      errorType: '',
+    },
+  })
 
+  const { getByTestId } = render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+  )
 
-
-
+  expect(getByTestId('cart-error')).toBeInTheDocument()
+})

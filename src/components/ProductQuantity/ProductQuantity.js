@@ -57,7 +57,7 @@ const ProductQuantity = props => {
     <div className="product__quantity">
       <span>
         Obecnie masz{' '}
-        <span className="product__quantity--number">{props.quantity}</span>{' '}
+        <span className="product__quantity--number" data-testid="product-quantity">{props.quantity}</span>{' '}
         sztuk produktu
       </span>
       <div className="product__quantity--buttons">
@@ -65,6 +65,7 @@ const ProductQuantity = props => {
           className="product__quantity--minus"
           ref={substractButton}
           onClick={substractProduct}
+          data-testid="substract-button"
         >
           <FaMinus />
         </span>
@@ -72,6 +73,7 @@ const ProductQuantity = props => {
           className="product__quantity--plus"
           ref={addButton}
           onClick={addProduct}
+          data-testid="add-button"
         >
           <FaPlus />
         </span>
