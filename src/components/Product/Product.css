@@ -3,6 +3,7 @@
     grid-template-columns: 1fr 1fr;
     padding: 24px 0px 24px 0;
 }
+
 .product::after {
     content: "";
     margin-top: 0px;
@@ -12,10 +13,12 @@
     display: block;
     margin-left: 2%;
 }
+
 .product__name, .product__price {
     font-weight: 500;
     font-size: 20px;
 }
+
 .product__price {
     text-align: right;
 }
@@ -30,7 +33,7 @@
 @media (max-width: 480px) {
     .product__content {
         display: flex;
-        flex-direction:column;
+        flex-direction: column;
         position: relative;
     }
     .product__price {
