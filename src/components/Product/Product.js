@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import ProductQuantity from '../ProductQuantity/ProductQuantity'
-import { formatter } from '../Formatter/Formatter'
+import { priceFormatter } from '../Formatter/Formatter'
 import PropTypes from 'prop-types'
 import './Product.css'
 
@@ -19,7 +19,7 @@ const Product = props => {
   return (
     <div className="product__content">
       <div className="product__name">{props.product.name}</div>
-      <div className="product__price" data-testid="product-price">{formatter.format(price)}</div>
+      <div className="product__price" data-testid="product-price">{priceFormatter.format(price)}</div>
       <ProductQuantity
         quantity={quantity}
         setQuantity={setQuantity}

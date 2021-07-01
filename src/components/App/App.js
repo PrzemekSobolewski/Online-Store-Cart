@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import * as getCartActions from '../../redux/actions/getCartActions'
 import Product from '../Product/Product'
-import { formatter } from '../Formatter/Formatter'
+import { priceFormatter } from '../Formatter/Formatter'
 import { FadeLoader } from 'react-spinners'
 import './App.css'
 
@@ -38,7 +38,7 @@ const App = () => {
 
   useEffect(() => {
     setSummary(
-      formatter.format(
+      priceFormatter.format(
         productsInCart.reduce((total, product) => {
           return total + parseFloat(product.price)
         }, 0),

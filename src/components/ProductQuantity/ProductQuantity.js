@@ -5,6 +5,7 @@ import { FaPlus, FaMinus } from 'react-icons/fa'
 import debounce from 'lodash/debounce'
 import { PulseLoader } from 'react-spinners'
 import PropTypes from 'prop-types'
+import { quantityFormatter } from '../Formatter/Formatter'
 import './ProductQuantity.css'
 
 const ProductQuantity = props => {
@@ -58,7 +59,7 @@ const ProductQuantity = props => {
       <span>
         Obecnie masz{' '}
         <span className="product__quantity--number" data-testid="product-quantity">{props.quantity}</span>{' '}
-        sztuk produktu
+        {quantityFormatter(props.quantity)} produktu
       </span>
       <div className="product__quantity--buttons">
         <span

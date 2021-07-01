@@ -7,15 +7,7 @@ import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import products from '../../__mock__/cart.json'
 
-const productsInCart = products
-
-const setState = jest.fn()
-const mockHandleSummaryChange = jest.fn((pid, price) => {
-  const filteredProduct = productsInCart.find(product => product.pid === pid)
-  const newProduct = { ...filteredProduct, price: price }
-  const filteredList = productsInCart.filter(product => product.pid !== pid)
-  setState([...filteredList, newProduct])
-})
+const mockHandleSummaryChange = jest.fn()
 
 const mockStore = configureMockStore([thunk])
 const store = mockStore({
@@ -29,10 +21,6 @@ const store = mockStore({
 })
 
 test('test Product component buttons', async () => {
-  jest
-    .spyOn(React, 'useState')
-    .mockImplementation(initState => [initState, setState])
-
   const { getByText, getByTestId } = render(
     <Provider store={store}>
       <Product
